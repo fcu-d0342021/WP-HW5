@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+	<!-- x-ua-compatible 用來指定IE瀏覽器解析編譯
+		而IE=edge指定瀏覽器按照最高的標準模式解析頁面。 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>test</title>
+
+	 <style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+	<style>
+       #maple {
+        height: 200px;
+        width: 10%;
+       }
+    </style>
+  </head>
+  <body>
+	<h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+
+  
+	<script>
+	
+      function initMap() {
+        var FCU = {lat:24.178657, lng: 120.646545};
+		var ACU = {lat:24.118657, lng: 120.606545};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 13,
+          center: FCU,
+        });
+
+        var icons = {
+			postOffice: { icon: 'PostOffice.png' },
+			gasStation: { icon: 'GasStation.png' }
+		};
+
+		var features=[
+                    { position: new google.maps.LatLng(24.190477, 120.612214), type: 'postOffice'},		
+                    { position: new google.maps.LatLng(24.175271, 120.649134), type: 'postOffice'},
+                    { position: new google.maps.LatLng(24.164623, 120.654207), type: 'postOffice'},
+                    { position: new google.maps.LatLng(24.156530, 120.652868), type: 'postOffice'},
+                    { position: new google.maps.LatLng(24.169471, 120.606564), type: 'postOffice'},
+                    { position: new google.maps.LatLng(24.200952, 120.658748), type: 'gasStation'},
+                    { position: new google.maps.LatLng(24.192620, 120.623164), type: 'gasStation'},
+                    { position: new google.maps.LatLng(24.162787, 120.650084), type: 'gasStation'},
+                    { position: new google.maps.LatLng(24.201724, 120.610419), type: 'gasStation'},
+                    { position: new google.maps.LatLng(24.195166, 120.644259), type: 'gasStation'}                    
+                ];
+
+        var geocoder = new google.maps.Geocoder;
+
+        features.forEach(function (features)
+        {
+            var marker = new google.maps.Marker(
+            {
+                position: features.position,
+                icon: icons[features.type].icon,
+                map: map
+            });
+
+            geocoder.geocode({'location': features.position}, function(results, status) 
+            {		
+            	if (status === 'OK') 
+            	{
+      				if (results[0]) 
+      				{
+				    	var infowindow = new google.maps.InfoWindow(
+				    	{
+		            		content: '<div>' + '<h2>' + results[0].formatted_address + '</h2>' + '</div>'
+		       		 	});
+		       		 	marker.addListener('mouseover', function (features) 
+		       		 	{
+		                	infowindow.open(map, marker);
+			            });
+			           	marker.addListener('mouseout', function (features)
+			           	{
+			                infowindow.close();
+			            });
+			        }
+ 		           	else 
+ 		           	{
+			        	window.alert('No results found');
+			      	}
+    			} 
+    			else 
+    			{
+      				window.alert('Geocoder failed due to: ' + status);
+    			}
+			      
+			});            
+            
+        });
+    }
+		
+    </script>
+	
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRNI28QhkKXS4BXriCvOcLpvDY8anGJCs&callback=initMap"
+    async defer></script>
+
+  </body>
+</html>
+
